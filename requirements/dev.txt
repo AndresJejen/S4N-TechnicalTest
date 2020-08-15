@@ -1,0 +1,8 @@
+-r prod.txt
+-r test.txt
+pip
+wheel
+flake8
+Sphinx
+bump2version
+python-dotenv
