@@ -10,7 +10,7 @@ class TestEvent(unittest.TestCase):
         event = Event(
             Id = "Identificador0",
             Type = "Push",
-            Repo_Id = "12345",
+            Repo_Id = 12345,
             Repo_Name = "Repo",
             Repo_Url = "https://github.com/user/repoName",
             User = "user",
@@ -21,7 +21,7 @@ class TestEvent(unittest.TestCase):
 
         self.assertEqual(event.Id, "Identificador0")
         self.assertEqual(event.Type, "Push")
-        self.assertEqual(event.Repo_Id, "12345")
+        self.assertEqual(event.Repo_Id, 12345)
         self.assertEqual(event.Repo_Name, "Repo")
         self.assertEqual(event.Repo_Url, "https://github.com/user/repoName")
         self.assertEqual(event.User, "user")
@@ -35,7 +35,7 @@ class TestEvent(unittest.TestCase):
             {
                 'Id' : "Identificador0", 
                 'Type' : "Push", 
-                'Repo_Id' : "12345", 
+                'Repo_Id' : 12345, 
                 'Repo_Name' : "Repo", 
                 'Repo_Url' : "https://github.com/user/repoName", 
                 'User' : "user", 
@@ -46,7 +46,7 @@ class TestEvent(unittest.TestCase):
         )
         self.assertEqual(event.Id,  "Identificador0")
         self.assertEqual(event.Type,    "Push")
-        self.assertEqual(event.Repo_Id,     "12345")
+        self.assertEqual(event.Repo_Id,     12345)
         self.assertEqual(event.Repo_Name,   "Repo")
         self.assertEqual(event.Repo_Url,    "https://github.com/user/repoName")
         self.assertEqual(event.User,    "user")
@@ -58,7 +58,7 @@ class TestEvent(unittest.TestCase):
         event_dict = {
             'Id' : "Identificador0", 
             'Type' : "Push", 
-            'Repo_Id' : "12345", 
+            'Repo_Id' : 12345, 
             'Repo_Name' : "Repo", 
             'Repo_Url' : "https://github.com/user/repoName", 
             'User' : "user", 
@@ -75,7 +75,7 @@ class TestEvent(unittest.TestCase):
         event_dict = {
             'Id' : "Identificador0", 
             'Type' : "Push", 
-            'Repo_Id' : "12345", 
+            'Repo_Id' : 12345, 
             'Repo_Name' : "Repo", 
             'Repo_Url' : "https://github.com/user/repoName", 
             'User' : "user", 

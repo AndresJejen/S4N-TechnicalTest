@@ -27,7 +27,7 @@ class TestGistSerializer(unittest.TestCase):
         )
 
         expected_json = """
-            {{
+            {
                 "Id": "12345", 
                 "Url": "https://github.com/user/gist/gistName", 
                 "ForksUrl": "https://github.com/user/gist/gistName", 
@@ -41,7 +41,7 @@ class TestGistSerializer(unittest.TestCase):
                 "UpdatedAt": "2019-10-13T23:08:50Z", 
                 "OwnerId": "7890", 
                 "OwnerUrl": "https://github.com/user"
-            }}
+            }
         """
 
         json_gist = json.dumps(gist, cls=srs.GistEncoder)

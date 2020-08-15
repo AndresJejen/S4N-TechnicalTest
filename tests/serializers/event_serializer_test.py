@@ -13,7 +13,7 @@ class TestEventSerializer(unittest.TestCase):
         event = Event(
             Id = "Identificador0",
             Type = "Push",
-            Repo_Id = "12345",
+            Repo_Id = 12345,
             Repo_Name = "Repo",
             Repo_Url = "https://github.com/user/repoName",
             User = "user",
@@ -23,17 +23,17 @@ class TestEventSerializer(unittest.TestCase):
         )
 
         expected_json = """
-            {{
+            {
                 "Id": "Identificador0", 
                 "Type": "Push", 
-                "Repo_Id": "12345", 
+                "Repo_Id": 12345, 
                 "Repo_Name": "Repo", 
                 "Repo_Url": "https://github.com/user/repoName", 
                 "User": "user", 
                 "User_Url": "https://github.com/user", 
                 "Public": true, 
                 "Date": "2019-10-13T23:08:50Z" 
-            }}
+            }
         """
 
         json_event = json.dumps(event, cls=srs.EventEncoder)

@@ -1,6 +1,6 @@
 from S4NGithubApi.domain import Empresa as em
 
-class Repo:
+class GithubRepo:
 
     def __init__(self, entries=None):
         self._entries = []
@@ -13,7 +13,7 @@ class Repo:
 
         key, operator = key.split('__')
 
-        if operator not in ['eq', 'lt', 'gt']:
+        if operator not in ['eq']:
             raise ValueError('Operator {} is not supported'.format(operator))
 
         operator = '__{}__'.format(operator)
@@ -21,18 +21,15 @@ class Repo:
         if (value is None):
             return element[key] is None
 
-        elif key in ['event', 'gist']:
+        elif key in ['type']:
             return getattr(str(element[key]), operator)(str(value))
         return getattr(element[key], operator)(value)
 
-    def list(self, filters=None):
-        if not filters:
-            result = self._entries
-        else:
-            result = []
-            result.extend(self._entries)
+    def list(self, filters):
+        result = []
+        result.extend(self._entries)
 
-            for key, value in filters.items():
-                result = [e for e in result if self._check(e, key, value)]
+        for key, value in filters.items():
+            result = [e for e in result if self._check(e, key, value)]
 
         return [em.Empresa.from_dict(r) for r in result]
