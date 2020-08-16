@@ -16,7 +16,7 @@ class TestUseCaseEventList(unittest.TestCase):
             Event(
                 Id = "Identificador0",
                 Type = "Push",
-                Repo_Id = "12345",
+                Repo_Id = 12345,
                 Repo_Name = "Repo",
                 Repo_Url = "https://github.com/user/repoName",
                 User = "user",
@@ -27,7 +27,7 @@ class TestUseCaseEventList(unittest.TestCase):
             Event(
                 Id = "Identificador1",
                 Type = "pull",
-                Repo_Id = "1234589",
+                Repo_Id = 1234589,
                 Repo_Name = "Repo",
                 Repo_Url = "https://github.com/user/repoName",
                 User = "user",

@@ -2,7 +2,7 @@ import unittest
 
 from S4NGithubApi.domain.Event import Event
 from S4NGithubApi.shared.domain_model import DomainModel
-from S4NGithubApi.respository import github_repo as github_repo
+from S4NGithubApi.respository import github_repo
 import uuid
 
 
@@ -28,7 +28,7 @@ class TestEventGithubRepo(unittest.TestCase):
                     "name": "BeitlabDataScience/SQL-Python--DataScience-Show-c3",
                     "url": "https://api.github.com/repos/BeitlabDataScience/SQL-Python--DataScience-Show-c3"
                 },
-                "public": true,
+                "public": True,
                 "created_at": "2020-08-09T14:50:42Z",
                 "org": {
                     "id": 69426515,
@@ -54,7 +54,7 @@ class TestEventGithubRepo(unittest.TestCase):
                     "name": "BeitlabDataScience/SQL-Python--DataScience-Show-c3",
                     "url": "https://api.github.com/repos/BeitlabDataScience/SQL-Python--DataScience-Show-c3"
                 },
-                "public": true,
+                "public": True,
                 "created_at": "2020-08-09T14:50:42Z",
                 "org": {
                     "id": 69426515,
@@ -80,7 +80,7 @@ class TestEventGithubRepo(unittest.TestCase):
                     "name": "BeitlabDataScience/SQL-Python--DataScience-Show-c3",
                     "url": "https://api.github.com/repos/BeitlabDataScience/SQL-Python--DataScience-Show-c3"
                 },
-                "public": true,
+                "public": True,
                 "created_at": "2020-08-09T14:50:34Z",
                 "org": {
                     "id": 69426515,
@@ -106,7 +106,7 @@ class TestEventGithubRepo(unittest.TestCase):
                     "name": "BeitlabDataScience/SQL-Python--DataScience-Show-c3",
                     "url": "https://api.github.com/repos/BeitlabDataScience/SQL-Python--DataScience-Show-c3"
                 },
-                "public": true,
+                "public": True,
                 "created_at": "2020-08-09T14:50:28Z",
                 "org": {
                     "id": 69426515,
@@ -132,7 +132,7 @@ class TestEventGithubRepo(unittest.TestCase):
                     "name": "BeitlabDataScience/SQL-Python--DataScience-Show-c3",
                     "url": "https://api.github.com/repos/BeitlabDataScience/SQL-Python--DataScience-Show-c3"
                 },
-                "public": true,
+                "public": True,
                 "created_at": "2020-08-09T14:49:52Z",
                 "org": {
                     "id": 69426515,
@@ -151,13 +151,9 @@ class TestEventGithubRepo(unittest.TestCase):
 
     def test_repository_list_without_parameters(self):
         repo = github_repo.GithubRepo(self.domain_events)
-        result = repo.list()
 
-        self._check_results(
-            result,
-            self.domain_events
-        )
-
+        with self.assertRaises(ValueError) as context:
+            repo.list()
 
     def test_repository_list_with_filters_unknown_key(self):
         repo = github_repo.GithubRepo(self.domain_events)
@@ -165,105 +161,44 @@ class TestEventGithubRepo(unittest.TestCase):
         with self.assertRaises(KeyError) as context:
             repo.list(filters={'weird': 'events'})
 
-
     def test_repository_list_with_filters_unknown_operator(self):
         repo = github_repo.GithubRepo(self.domain_events)
 
         with self.assertRaises(ValueError) as context:
             repo.list(filters={'__in': [20, 30]})
 
-
-    def test_repository_list_with_filters_IdActualSoft(self):
+    def test_repository_list_with_filters_events(self):
         repo = github_repo.GithubRepo(self.domain_events)
 
         self._check_results(
-            repo.list(filters={'IdActualSoft': 2}),
-            [self.domain_events[1]]
+            repo.list(filters={'type': 'events'}),
+            self.domain_events
         )
 
-
-    def test_repository_list_with_filters_IdActualSoft_eq(self):
+    def test_repository_list_with_filters_events_eq(self):
         repo = github_repo.GithubRepo(self.domain_events)
 
         self._check_results(
-            repo.list(filters={'IdActualSoft': 2}),
-            [self.domain_events[1]]
+            repo.list(filters={'type': 'events'}),
+            self.domain_events
         )
 
-    def test_repository_list_with_filters_IdOldSoft(self):
+    def test_repository_list_with_filters_gists(self):
         repo = github_repo.GithubRepo(self.domain_events)
-        result = repo.list(filters={'IdOldSoft': None})
+        result = repo.list(filters={'type': 'gists'})
 
         self._check_results(
             result,
-            [self.domain_events[1]]
+            self.domain_events
         )
 
-
-    def test_repository_list_with_filters_IdOldSoft_eq(self):
+    def test_repository_list_with_filters_gists_eq(self):
         repo = github_repo.GithubRepo(self.domain_events)
 
         self._check_results(
-            repo.list(filters={'IdOldSoft': None}),
-            [self.domain_events[1]]
-        )
-        
-    # def test_repository_list_with_filters_price_lt(self):
-    #     repo = github_repo.GithubRepo(self.domain_events)
-
-    #     self._check_results(
-    #         repo.list(filters={'price__lt': 60}),
-    #         [storageroom_dicts[0], storageroom_dicts[3]])
-
-
-    # def test_repository_list_with_filters_price_gt(self):
-    #     repo = github_repo.GithubRepo(self.domain_events)
-    #     self._check_results(
-    #         repo.list(filters={'price__gt': 60}),
-    #         [storageroom_dicts[1]]
-    #     )
-
-
-    # def test_repository_list_with_filters_size(self):
-    #     repo = github_repo.GithubRepo(self.domain_events)
-
-    #     self._check_results(
-    #         repo.list(filters={'size': 93}),
-    #         [storageroom_dicts[3]]
-    #     )
-
-
-    # def test_repository_list_with_filters_size_eq(self):
-    #     repo = github_repo.GithubRepo(self.domain_events)
-    #     self._check_results(
-    #         repo.list(filters={'size__eq': 93}),
-    #         [storageroom_dicts[3]]
-    #     )
-
-
-    # def test_repository_list_with_filters_size_lt(self):
-    #     repo = github_repo.GithubRepo(self.domain_events)
-    #     self._check_results(
-    #         repo.list(filters={'size__lt': 60}),
-    #         [storageroom_dicts[2]]
-    #     )
-
-
-    # def test_repository_list_with_filters_size_gt(self):
-    #     repo = github_repo.GithubRepo(self.domain_events)
-    #     self._check_results(
-    #         repo.list(filters={'size__gt': 400}),
-    #         [storageroom_dicts[1]]
-    #     )
-
-
-    def test_repository_list_with_filters_id(self):
-        repo = github_repo.GithubRepo(self.domain_events)
-
-        self._check_results(
-            repo.list(filters={'id': '913694c6-435a-4366-ba0d-da5334a611b2'}),
-            [self.domain_events[0]]
+            repo.list(filters={'type': 'gists'}),
+            self.domain_events
         )
 
-    
-
+if __name__ == "main":
+    unittest.main()

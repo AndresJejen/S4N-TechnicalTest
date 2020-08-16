@@ -14,7 +14,7 @@ class Gist(object):
         Public: bool,
         Created_at: str,
         UpdatedAt: str,
-        OwnerId: str,
+        OwnerId: int,
         OwnerUrl: str,
     ):
         """Creates a Gist Object

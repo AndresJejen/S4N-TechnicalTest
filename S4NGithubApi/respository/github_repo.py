@@ -1,9 +1,11 @@
-from S4NGithubApi.domain import Empresa as em
+from S4NGithubApi.domain import Event as em
+import requests
 
 class GithubRepo:
 
     def __init__(self, entries=None):
         self._entries = []
+        self._basicRoute="https://api.github.com/users/{0}/{1}?page=1&per_page={2}"
         if entries:
             self._entries.extend(entries)
 
@@ -16,20 +18,149 @@ class GithubRepo:
         if operator not in ['eq']:
             raise ValueError('Operator {} is not supported'.format(operator))
 
-        operator = '__{}__'.format(operator)
-
         if (value is None):
-            return element[key] is None
-
+            return False
         elif key in ['type']:
-            return getattr(str(element[key]), operator)(str(value))
-        return getattr(element[key], operator)(value)
+            if values in ['gists', 'events']:
+                return True
+            else:
+                return True
 
-    def list(self, filters):
+
+    def _query_to_event(self, data):
+        def to_event(element):
+            return {
+                "Id"        : element["id"],
+                "Type"      : element["type"],
+                "Repo_Id"   : element["repo"]["id"],
+                "Repo_Name" : element["repo"]["name"],
+                "Repo_Url"  : element["repo"]["url"],
+                "User"      : element["actor"]["login"],
+                "User_Url"  : element["actor"]["url"],
+                "Public"    : element["public"],
+                "Date"      : element["created_at"]
+            }
+
+        return { value["id"]: to_event(value) for value in data }
+
+    def _query_to_gists(self, data):
+        def to_gist(element):
+            return {
+                "Id"         : element["id"],
+                "Url"        : element["url"],
+                "ForksUrl"   : element["forks_url"],
+                "CommitsUrl" : element["commits_url"],
+                "HtmlUrl"    : element["html_url"],
+                "Node_Id"    : element["node_id"],
+                "GitPullurl" : element["git_pull_url"],
+                "GitPushUrl" : element["git_push_url"],
+                "Public"     : element["public"],
+                "Created_at" : element["created_at"],
+                "UpdatedAt"  : element["updated_at"],
+                "OwnerId"    : element["owner"]["id"],
+                "OwnerUrl"   : element["owner"]["url"],
+            }
+
+        return [to_gist(value) for value in data]
+
+    def _singleUserFromGitHub(self, value, user):
+        query = self._basicRoute.format(user,value, 3 if value == 'gists' else 5)
+        result = requests.get(query).json()
+        if (result.status_code == 200):
+            return result
+        return []
+
+    def _queryAllusersFromGitHub(self, value, users):
         result = []
-        result.extend(self._entries)
+        for user in users:
+            result.extend(self._singleUserFromGitHub(value, user))
+        if (value is 'gists'):
+            return self._query_to_gists(result)
+        else:
+            return self._query_to_event(result)
 
-        for key, value in filters.items():
-            result = [e for e in result if self._check(e, key, value)]
 
-        return [em.Empresa.from_dict(r) for r in result]
+    def _validateFilters(self, filters):
+        if not filters:
+            raise ValueError('you have to add a type query')
+        elif len(list(filters.items())) is not 1:
+            raise ValueError('you have to ads just a type query')
+        else:
+            key, value = list(filters.items())[0]
+            if self._check(key, value) == False:
+                raise ValueError('Please add a valid query [type: events] or [type: gists]')
+            return key, value
+    
+    def _validateBody(self, body):
+        if (not body) or (type(body) is not list):
+            raise ValueError('you have to add users to query')
+        elif len(body) is 0:
+            raise ValueError('you have to add users to query')
+        else:
+            function = lambda a,b: (type(b) == str) and a
+            if functools.reduce(function,body,True) is not True:
+                raise ValueError('you have to add a list of users to query in string format')
+
+    def list(self, filters=None, body=None):
+        key, value = self._validateFilters(filters)
+        self._validateBody(body)
+        if len(self._entries) > 0: # Mock repo
+            result =  [
+                {
+                    'Id' : "13151049797", 
+                    'Type' : "Push", 
+                    'Repo_Id' : 12345, 
+                    'Repo_Name' : "Repo", 
+                    'Repo_Url' : "https://github.com/user/repoName", 
+                    'User' : "user", 
+                    'User_Url' : "https://github.com/user", 
+                    'Public' : True, 
+                    'Date' : "2019-10-13T23:08:50Z" 
+                },
+                {
+                    'Id' : "13151049761", 
+                    'Type' : "Push", 
+                    'Repo_Id' : 12345, 
+                    'Repo_Name' : "Repo", 
+                    'Repo_Url' : "https://github.com/user/repoName", 
+                    'User' : "user", 
+                    'User_Url' : "https://github.com/user", 
+                    'Public' : True, 
+                    'Date' : "2019-10-13T23:08:50Z" 
+                },
+                {
+                    'Id' : "13151049367", 
+                    'Type' : "Push", 
+                    'Repo_Id' : 12345, 
+                    'Repo_Name' : "Repo", 
+                    'Repo_Url' : "https://github.com/user/repoName", 
+                    'User' : "user", 
+                    'User_Url' : "https://github.com/user", 
+                    'Public' : True, 
+                    'Date' : "2019-10-13T23:08:50Z" 
+                },
+                {
+                    'Id' : "13151049047", 
+                    'Type' : "Push", 
+                    'Repo_Id' : 12345, 
+                    'Repo_Name' : "Repo", 
+                    'Repo_Url' : "https://github.com/user/repoName", 
+                    'User' : "user", 
+                    'User_Url' : "https://github.com/user", 
+                    'Public' : True, 
+                    'Date' : "2019-10-13T23:08:50Z" 
+                },
+                {
+                    'Id' : "13151046844", 
+                    'Type' : "Push", 
+                    'Repo_Id' : 12345, 
+                    'Repo_Name' : "Repo", 
+                    'Repo_Url' : "https://github.com/user/repoName", 
+                    'User' : "user", 
+                    'User_Url' : "https://github.com/user", 
+                    'Public' : True, 
+                    'Date' : "2019-10-13T23:08:50Z" 
+                }
+            ]
+        else:
+            return self._queryAllusersFromGitHub(value, body)

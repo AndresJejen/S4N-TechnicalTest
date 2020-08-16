@@ -18,7 +18,7 @@ class TestGist(unittest.TestCase):
             Public = True,
             Created_at = "2019-10-13T23:08:50Z",
             UpdatedAt = "2019-10-13T23:08:50Z",
-            OwnerId = "7890",
+            OwnerId = 7890,
             OwnerUrl = "https://github.com/user",
         )
 
@@ -33,7 +33,7 @@ class TestGist(unittest.TestCase):
         self.assertEqual(gist.Public, True)
         self.assertEqual(gist.Created_at, "2019-10-13T23:08:50Z")
         self.assertEqual(gist.UpdatedAt, "2019-10-13T23:08:50Z")
-        self.assertEqual(gist.OwnerId, "7890")
+        self.assertEqual(gist.OwnerId, 7890)
         self.assertEqual(gist.OwnerUrl, "https://github.com/user")
 
     def test_gist_model_from_dict(self):
@@ -50,7 +50,7 @@ class TestGist(unittest.TestCase):
                 'Public': True, 
                 'Created_at': "2019-10-13T23:08:50Z", 
                 'UpdatedAt': "2019-10-13T23:08:50Z", 
-                'OwnerId': "7890", 
+                'OwnerId': 7890, 
                 'OwnerUrl': "https://github.com/user", 
             }
         )
@@ -65,7 +65,7 @@ class TestGist(unittest.TestCase):
         self.assertEqual(gist.Public, True)
         self.assertEqual(gist.Created_at, "2019-10-13T23:08:50Z")
         self.assertEqual(gist.UpdatedAt, "2019-10-13T23:08:50Z")
-        self.assertEqual(gist.OwnerId, "7890")
+        self.assertEqual(gist.OwnerId, 7890)
         self.assertEqual(gist.OwnerUrl, "https://github.com/user")
 
     def test_gist_model_to_dict(self):
@@ -81,7 +81,7 @@ class TestGist(unittest.TestCase):
                 'Public': True, 
                 'Created_at': "2019-10-13T23:08:50Z", 
                 'UpdatedAt': "2019-10-13T23:08:50Z", 
-                'OwnerId': "7890", 
+                'OwnerId': 7890, 
                 'OwnerUrl': "https://github.com/user", 
             }
 
@@ -103,7 +103,7 @@ class TestGist(unittest.TestCase):
                 'Public': True, 
                 'Created_at': "2019-10-13T23:08:50Z", 
                 'UpdatedAt': "2019-10-13T23:08:50Z", 
-                'OwnerId': "7890", 
+                'OwnerId': 7890, 
                 'OwnerUrl': "https://github.com/user", 
             }
         gist1 = Gist.from_dict(gist_dict)

@@ -24,7 +24,7 @@ class TestUseCaseGistList(unittest.TestCase):
                 Public = True,
                 Created_at = "2019-10-13T23:08:50Z",
                 UpdatedAt = "2019-10-13T23:08:50Z",
-                OwnerId = "7890",
+                OwnerId = 7890,
                 OwnerUrl = "https://github.com/user",
             ),
             Gist(
@@ -39,7 +39,7 @@ class TestUseCaseGistList(unittest.TestCase):
                 Public = False,
                 Created_at = "2019-10-13T23:08:60Z",
                 UpdatedAt = "2019-10-13T23:08:60Z",
-                OwnerId = "7890888",
+                OwnerId = 7890888,
                 OwnerUrl = "https://github.com/user1",
             )
         ]
