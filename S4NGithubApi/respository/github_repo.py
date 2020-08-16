@@ -1,5 +1,6 @@
 from S4NGithubApi.domain import Event as em
 import requests
+import functools
 
 class GithubRepo:
 
@@ -9,7 +10,7 @@ class GithubRepo:
         if entries:
             self._entries.extend(entries)
 
-    def _check(self, element, key, value):
+    def _check(self, key, value):
         if '__' not in key:
             key = key + '__eq'
 
@@ -21,10 +22,11 @@ class GithubRepo:
         if (value is None):
             return False
         elif key in ['type']:
-            if values in ['gists', 'events']:
+            if value in ['gists', 'events']:
                 return True
             else:
                 return True
+        return False
 
 
     def _query_to_event(self, data):
@@ -65,9 +67,9 @@ class GithubRepo:
 
     def _singleUserFromGitHub(self, value, user):
         query = self._basicRoute.format(user,value, 3 if value == 'gists' else 5)
-        result = requests.get(query).json()
+        result = requests.get(query)
         if (result.status_code == 200):
-            return result
+            return result.json()
         return []
 
     def _queryAllusersFromGitHub(self, value, users):
@@ -78,7 +80,6 @@ class GithubRepo:
             return self._query_to_gists(result)
         else:
             return self._query_to_event(result)
-
 
     def _validateFilters(self, filters):
         if not filters:
@@ -98,69 +99,14 @@ class GithubRepo:
             raise ValueError('you have to add users to query')
         else:
             function = lambda a,b: (type(b) == str) and a
-            if functools.reduce(function,body,True) is not True:
+            result = functools.reduce(function,body,True)
+            if result is not True:
                 raise ValueError('you have to add a list of users to query in string format')
 
-    def list(self, filters=None, body=None):
+    def list(self, filters=None, body=None, mock=None):
         key, value = self._validateFilters(filters)
         self._validateBody(body)
         if len(self._entries) > 0: # Mock repo
-            result =  [
-                {
-                    'Id' : "13151049797", 
-                    'Type' : "Push", 
-                    'Repo_Id' : 12345, 
-                    'Repo_Name' : "Repo", 
-                    'Repo_Url' : "https://github.com/user/repoName", 
-                    'User' : "user", 
-                    'User_Url' : "https://github.com/user", 
-                    'Public' : True, 
-                    'Date' : "2019-10-13T23:08:50Z" 
-                },
-                {
-                    'Id' : "13151049761", 
-                    'Type' : "Push", 
-                    'Repo_Id' : 12345, 
-                    'Repo_Name' : "Repo", 
-                    'Repo_Url' : "https://github.com/user/repoName", 
-                    'User' : "user", 
-                    'User_Url' : "https://github.com/user", 
-                    'Public' : True, 
-                    'Date' : "2019-10-13T23:08:50Z" 
-                },
-                {
-                    'Id' : "13151049367", 
-                    'Type' : "Push", 
-                    'Repo_Id' : 12345, 
-                    'Repo_Name' : "Repo", 
-                    'Repo_Url' : "https://github.com/user/repoName", 
-                    'User' : "user", 
-                    'User_Url' : "https://github.com/user", 
-                    'Public' : True, 
-                    'Date' : "2019-10-13T23:08:50Z" 
-                },
-                {
-                    'Id' : "13151049047", 
-                    'Type' : "Push", 
-                    'Repo_Id' : 12345, 
-                    'Repo_Name' : "Repo", 
-                    'Repo_Url' : "https://github.com/user/repoName", 
-                    'User' : "user", 
-                    'User_Url' : "https://github.com/user", 
-                    'Public' : True, 
-                    'Date' : "2019-10-13T23:08:50Z" 
-                },
-                {
-                    'Id' : "13151046844", 
-                    'Type' : "Push", 
-                    'Repo_Id' : 12345, 
-                    'Repo_Name' : "Repo", 
-                    'Repo_Url' : "https://github.com/user/repoName", 
-                    'User' : "user", 
-                    'User_Url' : "https://github.com/user", 
-                    'Public' : True, 
-                    'Date' : "2019-10-13T23:08:50Z" 
-                }
-            ]
+            return mock
         else:
             return self._queryAllusersFromGitHub(value, body)
